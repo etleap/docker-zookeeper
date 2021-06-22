@@ -11,10 +11,13 @@ RUN wget -q -O - https://archive.apache.org/dist/zookeeper/zookeeper-3.5.5/apach
 
 # Make ZooKeeper clean up files regularly
 RUN sed -i 's/#autopurge.snapRetainCount=3/autopurge.snapRetainCount=100/' /opt/zookeeper/conf/zoo.cfg \
-    && sed -i 's/#autopurge.purgeInterval=1/autopurge.purgeInterval=1/' /opt/zookeeper/conf/zoo.cfg
+    && sed -i 's/#autopurge.purgeInterval=1/autopurge.purgeInterval=1/' /opt/zookeeper/conf/zoo.cfg 
 
 # Increase the tick time so we can increase the session timeout to 5 minutes
 RUN sed -i 's/tickTime=2000/tickTime=15000/' /opt/zookeeper/conf/zoo.cfg
+
+# Whitelist this commands
+RUN echo "4lw.commands.whitelist=stat, ruok, conf, isro" >> /opt/zookeeper/conf/zoo.cfg
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
