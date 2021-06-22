@@ -1,12 +1,11 @@
 # DOCKER-VERSION 1.0.1
 # VERSION        0.5
 
-FROM debian:jessie
-MAINTAINER Justin Plock <justin@plock.net>
+FROM debian:9.13
 
-RUN apt-get update && apt-get install -y openjdk-7-jre-headless wget
-RUN wget -q -O - http://apache.mirrors.pair.com/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz | tar -xzf - -C /opt \
-    && mv /opt/zookeeper-3.4.14 /opt/zookeeper \
+RUN apt-get update && apt-get install -y openjdk-8-jre-headless wget
+RUN wget -q -O - https://archive.apache.org/dist/zookeeper/zookeeper-3.5.5/apache-zookeeper-3.5.5-bin.tar.gz | tar -xzf - -C /opt \
+    && mv /opt/apache-zookeeper-3.5.5-bin /opt/zookeeper \
     && cp /opt/zookeeper/conf/zoo_sample.cfg /opt/zookeeper/conf/zoo.cfg \
     && mkdir -p /tmp/zookeeper
 
