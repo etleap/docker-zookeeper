@@ -18,6 +18,9 @@ RUN sed -i 's/#autopurge.snapRetainCount=3/autopurge.snapRetainCount=5/' /opt/zo
 RUN sed -i 's/tickTime=2000/tickTime=15000/' /opt/zookeeper/conf/zoo.cfg
 
 # Update the initLimit from 10 (default) to 100
+# initLimit: Amount of time, in ticks (see tickTime), to allow followers to connect and sync to a leader.
+# increased this value as needed, if the amount of data managed by ZooKeeper is large
+# increasing initLimit to a value that allows the snapshot transfer to complete fixed this problem
 RUN sed -i 's/initLimit=10/initLimit=100/' /opt/zookeeper/conf/zoo.cfg
 
 # Whitelist this commands
