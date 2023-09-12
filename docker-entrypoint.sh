@@ -17,4 +17,6 @@ then
   done
 fi
 
+export JVMFLAGS="-Djute.maxbuffer=2260213"
+
 /opt/zookeeper/bin/zkServer.sh "$CMD"
