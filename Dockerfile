@@ -1,9 +1,13 @@
 # DOCKER-VERSION 1.0.1
 # VERSION        0.5
 
-FROM debian:9.13
+FROM debian:10.13-slim
 
-RUN apt-get update && apt-get install -y openjdk-8-jre-headless wget
+RUN apt-get update && apt-get install -y wget gnupg software-properties-common
+
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+RUN add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
+RUN apt-get update && apt-get install -y adoptopenjdk-8-hotspot wget
 
 ARG ZOOKEEPER_VERSION
 ENV ZOOKEEPER_VERSION ${ZOOKEEPER_VERSION}
