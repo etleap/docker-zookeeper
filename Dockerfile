@@ -34,6 +34,9 @@ RUN sed -i 's/initLimit=10/initLimit=100/' /opt/zookeeper/conf/zoo.cfg
 # Whitelist this commands
 RUN echo "4lw.commands.whitelist=stat, ruok, conf, isro" >> /opt/zookeeper/conf/zoo.cfg
 
+# Fix Unreasonable length issue - https://www.pivotaltracker.com/story/show/185950085
+RUN echo "closeSessionTxn.enabled=false" >> /opt/zookeeper/conf/zoo.cfg
+
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
 EXPOSE 2181 2888 3888
