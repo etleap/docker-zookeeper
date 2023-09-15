@@ -5,9 +5,11 @@ FROM debian:10.13-slim
 
 RUN apt-get update && apt-get install -y wget gnupg software-properties-common
 
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
-RUN add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/
-RUN apt-get update && apt-get install -y adoptopenjdk-8-hotspot wget
+RUN mkdir -p /etc/apt/keyrings && \
+    wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc && \
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+
+RUN apt-get update && apt-get install -y temurin-8-jdk wget
 
 ARG ZOOKEEPER_VERSION
 ENV ZOOKEEPER_VERSION ${ZOOKEEPER_VERSION}
