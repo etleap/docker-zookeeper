@@ -1,9 +1,15 @@
 # DOCKER-VERSION 1.0.1
 # VERSION        0.5
 
-FROM debian:9.13
+FROM debian:10.13-slim
 
-RUN apt-get update && apt-get install -y openjdk-8-jre-headless wget
+RUN apt-get update && apt-get install -y wget gnupg software-properties-common
+
+RUN mkdir -p /etc/apt/keyrings && \
+    wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc && \
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+
+RUN apt-get update && apt-get install -y temurin-8-jdk wget
 
 ARG ZOOKEEPER_VERSION
 ENV ZOOKEEPER_VERSION ${ZOOKEEPER_VERSION}
@@ -29,6 +35,10 @@ RUN sed -i 's/initLimit=10/initLimit=100/' /opt/zookeeper/conf/zoo.cfg
 
 # Whitelist this commands
 RUN echo "4lw.commands.whitelist=stat, ruok, conf, isro" >> /opt/zookeeper/conf/zoo.cfg
+
+# Fix Unreasonable length issue - https://www.pivotaltracker.com/story/show/185950085
+# Zookeeper Issue: https://www.notion.so/Story-185950085-Zookeeper-cluster-failed-df2120dd5a6348878f433c11f3f8ef4e
+RUN echo "closeSessionTxn.enabled=false" >> /opt/zookeeper/conf/zoo.cfg
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
